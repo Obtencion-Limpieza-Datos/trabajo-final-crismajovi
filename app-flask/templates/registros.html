@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <title>Reporte PBX</title>
+  <!-- Latest compiled and minified CSS -->
+  <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</head>
+<body>
+<div class="container">
+  <h2>Consulta Registros de usuarios y llamadas</h2>
+  <form  action="" method="post" role="form">
+
+    <div class="form-group">
+      <label for="primero">Ingres nombre o inicial del usuario:</label>
+      <input type="text" class="form-control" id="primero" name="primero" placeholder="Nombres...">
+      <br>
+    </div>
+    <button type="submit" class="btn btn-success">Consultar</button>
+  </form>
+
+  <br>
+  <hr/>
+  <h2>Listado de coincidencias</h2>
+  {% if data %}
+
+  <h4>Número de coincidencias {{numero}}</h4>
+  <div>
+      <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+        <tr>
+          <th>Fecha y hora</th>
+          <th>Usuario</th>
+          <th>Departamento</th>
+          <th>Extensión</th>
+          <th>Destino llamada</th>
+          <th>Estado</th>
+          <th>Duración</th>
+        </tr>
+        </thead>
+        {% for d in data %}
+
+        <tr>
+          <td>{{d['Fecha'].decode('utf-8')}}</td>
+          <td>{{d['Usuario'].decode('utf-8')}}</td>
+          <td>{{d['Departamento'].decode('utf-8')}}</td>
+          <td>{{d['Fuente_llamada']}}</td>
+          <td>{{d['Destino_llamada']}}</td>
+          <td>{{d['Estado_llamada'].decode('utf-8')}}</td>
+          <td>{{d['Duracion'].decode('utf-8')}}</td>
+        </tr>
+        
+        {% endfor %}
+
+      </table>
+  </div>
+  {% endif %}
+  <div>
+    <br>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+
+        {% for message in messages %}
+            {% if "Error" not in message[1]: %}
+                <div class="alert alert-info">
+                <strong>Success! </strong> {{ message[1] }}
+                </div>
+            {% endif %}
+
+            {% if "Error" in message[1]: %}
+                <div class="alert alert-warning">
+                {{ message[1] }}
+                </div>
+            {% endif %}
+        {% endfor %}
+            {% endif %}
+        {% endwith %}
+  </div>
+</div>
+</body>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#example').DataTable();
+  });
+</script>
+</html>
